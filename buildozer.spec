@@ -8,6 +8,7 @@ version = 0.1
 requirements = python3,kivy
 orientation = portrait
 osx.kivy_version = 2.1.0
+android.permissions = CAMERA
 
 [buildozer]
 log_level = 2
