@@ -1,6 +1,6 @@
 [app]
-title = AndroidCameraApp
-package.name = androidcameratest
+title = HybridCameraApp
+package.name = hybridcameratest
 package.domain = org.example
 source.dir = .
 source.include_exts = py
@@ -8,7 +8,6 @@ version = 0.1
 requirements = python3,kivy,pyjnius
 android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 android.minapi = 21
-android.target = 33
 android.api = 33
 android.useandroidx = True
 entrypoint = main.py
