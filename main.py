@@ -10,21 +10,24 @@ import time
 
 class CameraApp(App):
     def build(self):
-        layout = BoxLayout(orientation='vertical')
+        layout = FloatLayout()
 
-        # Camera preview
-        self.camera = Camera(play=True)
-        self.camera.resolution = (640, 480)
-        layout.add_widget(self.camera)
+        # Camera widget (may be limited on Android)
+        cam = Camera(play=True, resolution=(1920, 1080))
+        cam.size_hint = (1, 1)
+        cam.pos_hint = {'x':0, 'y':0}
+        layout.add_widget(cam)
 
-        # Transparent overlay image (same size as camera preview)
-        self.overlay = Image(source='overlay.png', allow_stretch=True, keep_ratio=False)
-        layout.add_widget(self.overlay)
+        # Semi-transparent overlay image
+        overlay_img = Image(source='overlay.png', size_hint=(0.5, 0.5),
+                            pos_hint={'center_x':0.5, 'center_y':0.5},
+                            opacity=0.5)
+        layout.add_widget(overlay_img)
 
-        # Capture button
-        capture_btn = Button(text="Capture")
-        capture_btn.bind(on_press=self.capture_image)
-        layout.add_widget(capture_btn)
+        # Button on top
+        btn = Button(text='Capture', size_hint=(0.2, 0.1),
+                     pos_hint={'right':1, 'y':0})
+        layout.add_widget(btn)
 
         return layout
 
