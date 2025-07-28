@@ -1,17 +1,16 @@
 [app]
-title = CameraApp
-package.name = cameraapp
+title = AndroidCameraApp
+package.name = androidcameratest
 package.domain = org.example
 source.dir = .
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py
 version = 0.1
 requirements = python3,kivy,pyjnius
-android.permissions = CAMERA,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 android.minapi = 21
 android.target = 33
 android.api = 33
 android.useandroidx = True
-android.manifest.applicationMetaData = android:requestLegacyExternalStorage=true
 entrypoint = main.py
 orientation = portrait
 fullscreen = 0
