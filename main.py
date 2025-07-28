@@ -8,7 +8,15 @@ import os
 
 if platform == 'android':
     from android.permissions import request_permissions, Permission
-    from jnius import autoclass, PythonJavaClass, java_method
+    from jnius import autoclass, PythonJavaClass, java_method, cast
+
+    Context = autoclass('android.content.Context')
+    PythonActivity = autoclass('org.kivy.android.PythonActivity')
+    Toast = autoclass('android.widget.Toast')
+
+    def show_toast(message):
+        context = cast('android.content.Context', PythonActivity.mActivity)
+        Toast.makeText(context, str(message), Toast.LENGTH_SHORT).show()
 
     class PictureCallback(PythonJavaClass):
         __javainterfaces__ = ['android/hardware/Camera$PictureCallback']
@@ -25,9 +33,13 @@ if platform == 'android':
             fos = FileOutputStream(self.path)
             fos.write(data)
             fos.close()
-            print(f"Saved photo to: {self.path}")
             camera.release()
+            show_toast(f"Saved photo to: {self.path}")
             self.app.restore_kivy_preview()
+
+else:
+    def show_toast(message):
+        print(message)
 
 class HybridCameraApp(App):
     def build(self):
@@ -57,7 +69,7 @@ class HybridCameraApp(App):
         if platform != 'android':
             filename = f"photo_{int(time.time())}.png"
             self.camera.export_to_png(filename)
-            print(f"Saved screenshot to {filename}")
+            show_toast(f"Saved screenshot to {filename}")
         else:
             # Android-specific high-res capture
             self.layout.remove_widget(self.camera)
