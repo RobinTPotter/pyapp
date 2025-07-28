@@ -1,15 +1,22 @@
 [app]
-title = MyApp
-package.name = myapp
+title = CameraApp
+package.name = cameraapp
 package.domain = org.example
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
-requirements = python3,kivy
+requirements = python3,kivy,pyjnius
+android.permissions = CAMERA,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+android.minapi = 21
+android.target = 33
+android.api = 33
+android.useandroidx = True
+android.manifest.applicationMetaData = android:requestLegacyExternalStorage=true
+entrypoint = main.py
 orientation = portrait
-osx.kivy_version = 2.1.0
-android.permissions = CAMERA
+fullscreen = 0
+android.archs = armeabi-v7a,arm64-v8a
+android.ndk_api = 21
+log_level = 2
 
 [buildozer]
-log_level = 2
-warn_on_root = 1
