@@ -29,12 +29,15 @@ if platform == 'android':
 
         @java_method('([BLandroid/hardware/Camera;)V')
         def onPictureTaken(self, data, camera):
-            FileOutputStream = autoclass('java.io.FileOutputStream')
-            fos = FileOutputStream(self.path)
-            fos.write(data)
-            fos.close()
-            camera.release()
-            show_toast(f"Saved photo to: {self.path}")
+            try:
+                FileOutputStream = autoclass('java.io.FileOutputStream')
+                fos = FileOutputStream(self.path)
+                fos.write(data)
+                fos.close()
+                camera.release()
+                show_toast(f"Saved photo to: {self.path}")
+            except Exception as e:
+                show_toast(e)
             self.app.restore_kivy_preview()
 
 else:
