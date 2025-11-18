@@ -2,6 +2,8 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.graphics import *
+from kivy.core.window import Window
+Window.clearcolor = (1, 1, 1, 1)
 
 class Spots(Widget):
     def __init__(self, **kwargs):
@@ -40,6 +42,7 @@ class Spots(Widget):
             for x in range(0, self.size[0],self.spacex):
                 self.grid.append([x+(int(self.spacex/2) if row%2==0 else 0),y])
         with self.canvas:
+            Color(0.3,0.3,0.3)
             for p in self.grid:
 #                print(p)
                 Ellipse(pos = p, size=[2,2])
@@ -59,6 +62,7 @@ class Spots(Widget):
         self.end = self.find_nearest_point(touch.pos[0], touch.pos[1])
         if self.drawing:
             with self.canvas:
+                Color(0,0,0,1)
                 Line(points=self.start+self.end)
         self.start = self.find_nearest_point(touch.pos[0], touch.pos[1])
 
