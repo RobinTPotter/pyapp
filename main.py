@@ -12,17 +12,14 @@ class Spots(Widget):
         self.bind(size=self.update_canvas)
         self.bind(pos=self.update_canvas)
         self.py = 0.2828
-        self.spacex = 30
+        self.spacex = 100
         self.drawing = False
         self.update_canvas()
-
-
 
     def find_nearest_point(self, x, y):
         from math import sqrt
         nearest_point = None
         min_distance = float('inf')
-
         for px, py in self.grid:
             distance = sqrt((px - x)**2 + (py - y)**2)
             if distance < min_distance:
@@ -30,8 +27,6 @@ class Spots(Widget):
                 nearest_point = [px, py]
 
         return nearest_point
-
-
 
     def update_canvas(self, *args):
         self.grid = [ ]
