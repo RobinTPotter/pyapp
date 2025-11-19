@@ -44,6 +44,7 @@ class Spots(Widget):
             Color(0.3,0.3,0.3)
             for p in self.grid:
 #                print(p)
+                p = (p[0]-1, p[1]-1)
                 Ellipse(pos = p, size=[2,2])
 
 
