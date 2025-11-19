@@ -1,7 +1,7 @@
 [app]
-title = MyApp
-package.name = myapp
-package.domain = org.example
+title = IsoDraw
+package.name = isodraw
+package.domain = org.robins
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 version = 0.1

@@ -44,7 +44,6 @@ class Spots(Widget):
         with self.canvas:
             Color(0.3,0.3,0.3)
             for p in self.grid:
-#                print(p)
                 p = (p[0]-1, p[1]-1)
                 Ellipse(pos = p, size=[2,2])
             
@@ -83,7 +82,6 @@ class Spots(Widget):
     def on_touch_move(self, touch):
 #        print(f"move {touch}")
         self.end = self.find_nearest_point(touch.pos[0], touch.pos[1])
-        #self.line = Line(points=self.start+self.end)
         if self.drawing:
             self.canvas.remove_group('temp_line')
             with self.canvas:
@@ -93,9 +91,8 @@ class Spots(Widget):
                     Color(0,1,0,0.5, group='temp_line')
                     Line(points=self.start+self.end, width=2, group='temp_line')
                 print(f"{self.start} to {self.end}")
-        #self.start = self.find_nearest_point(touch.pos[0], touch.pos[1])
 
-class MyApp(App):
+class IsoDraw(App):
     def build(self):
         return Spots()
  
@@ -103,4 +100,4 @@ class MyApp(App):
         print("pausing")
 
 if __name__=="__main__":
-    MyApp().run()
+    IsoDraw().run()
