@@ -1,8 +1,11 @@
+from kivy.config import Config
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.graphics import *
 from kivy.core.window import Window
+
+Config.set('kivy','pause_on_minimize', 1)
 Window.clearcolor = (1, 1, 1, 1)
 
 class Spots(Widget):
