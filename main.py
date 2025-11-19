@@ -17,6 +17,7 @@ class Spots(Widget):
         self.py = 0.2828
         self.spacex = 100
         self.drawing = False
+        self.lines = []
         self.update_canvas()
 
     def find_nearest_point(self, x, y):
@@ -46,23 +47,35 @@ class Spots(Widget):
 #                print(p)
                 p = (p[0]-1, p[1]-1)
                 Ellipse(pos = p, size=[2,2])
+            
+            Color(0,0,0,1)
+            for line in self.lines:
+                Color(0,0,0,1)
+                Line(points=line[0]+line[1])
 
 
 
     def on_touch_down(self, touch):
 #        print(f"down {touch}")
+        if touch.is_double_tap:
+            print("double tap - clearing last")
+            if len(self.lines)>0: self.lines.pop()
+            self.update_canvas()
+            return
         self.start = self.find_nearest_point(touch.pos[0], touch.pos[1])
         self.drawing = True
 
     def on_touch_up(self, touch):
+        # each time the user lifts the finger, finalize the line, by adding it to the list of line self.lines, when update canvas is called, all lines in self.lines are drawn
+
         print(f"up {touch}")
         self.end = self.find_nearest_point(touch.pos[0], touch.pos[1])
-        if self.drawing:
-            with self.canvas:
-                Color(0,0,0,1)
-                with self.canvas:
-                    Line(points=self.start+self.end)
-                print(f"{self.start} to {self.end}")
+        if self.drawing and self.start != self.end:
+            self.lines.append((self.start, self.end))
+            print(f"number of lines {len(self.lines)}")
+            self.update_canvas()
+        
+        print(f"{self.start} to {self.end}")
         
         self.canvas.remove_group('temp_line')
         self.drawing = False
