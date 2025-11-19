@@ -31,6 +31,7 @@ class Spots(Widget):
     def update_canvas(self, *args):
         self.grid = [ ]
         print(self.size)
+        self.canvas.clear()
         row = 0 
         for y in range(0, self.size[1],int(self.spacex*self.py)):
             row += 1
@@ -42,28 +43,47 @@ class Spots(Widget):
 #                print(p)
                 Ellipse(pos = p, size=[2,2])
 
+
+
     def on_touch_down(self, touch):
 #        print(f"down {touch}")
         self.start = self.find_nearest_point(touch.pos[0], touch.pos[1])
         self.drawing = True
 
     def on_touch_up(self, touch):
-#        print(f"up {touch}")
+        print(f"up {touch}")
         self.end = self.find_nearest_point(touch.pos[0], touch.pos[1])
+        if self.drawing:
+            with self.canvas:
+                Color(0,0,0,1)
+                with self.canvas:
+                    Line(points=self.start+self.end)
+                print(f"{self.start} to {self.end}")
+        
+        self.canvas.remove_group('temp_line')
         self.drawing = False
 
     def on_touch_move(self, touch):
 #        print(f"move {touch}")
         self.end = self.find_nearest_point(touch.pos[0], touch.pos[1])
+        #self.line = Line(points=self.start+self.end)
         if self.drawing:
+            self.canvas.remove_group('temp_line')
             with self.canvas:
                 Color(0,0,0,1)
-                Line(points=self.start+self.end)
-        self.start = self.find_nearest_point(touch.pos[0], touch.pos[1])
+                with self.canvas:
+                    # width = 2
+                    Color(0,1,0,0.5, group='temp_line')
+                    Line(points=self.start+self.end, width=2, group='temp_line')
+                print(f"{self.start} to {self.end}")
+        #self.start = self.find_nearest_point(touch.pos[0], touch.pos[1])
 
 class MyApp(App):
     def build(self):
         return Spots()
+ 
+    def on_pause(self):
+        print("pausing")
 
 if __name__=="__main__":
     MyApp().run()
