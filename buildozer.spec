@@ -1,5 +1,5 @@
 [app]
-title = IsoDraw
+title = DemoApp
 package.name = isodraw
 package.domain = org.robins
 source.dir = .
