@@ -7,8 +7,6 @@ from kivy.properties import StringProperty
 from kivy.core.window import Window
 
 
-
-
 class RightWidget(Widget):
     update_callback = None
     name = None
