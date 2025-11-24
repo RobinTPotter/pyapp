@@ -137,6 +137,7 @@ class Spots(Widget):
             if len(non_mouse_touches) < 2:
                 self.pinch_start_distance = None
                 self.pinch_start_scale = None
+                self.update_canvas()
         
         button = getattr(touch, 'button', 'left')
         
@@ -185,7 +186,7 @@ class Spots(Widget):
                 scale_factor = current_distance / self.pinch_start_distance
                 self.scale = max(0.5, min(3.0, self.pinch_start_scale * scale_factor))  # Limit scale between 0.5x and 3x
                 
-                self.update_canvas()
+                # self.update_canvas()
                 return True
         
         button = getattr(touch, 'button', 'left')
