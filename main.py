@@ -250,17 +250,16 @@ class IsoDraw(App):
         # Right widget
         # ---------------------------------------------------------------------
         right = ScaleWidget(
-            size_hint=(None, 1),
+            size_hint=(0.1, 1),
             pos_hint={"right": 1, "y": 0}
         )
-        right.width = 50
         right.name = "right"
         # Update the color to semi-transparent (or customize as needed)
         right.color.rgba = (0.9, 0.9, 0.9, 0.8)  # Light gray, semi-transparent
 
         def right_update_callback(dx, dy, update=True):
             old_scale = spots_widget.scale
-            new_scale = round(max(min(2, old_scale + dy/10), 0.5), 2)
+            new_scale = round(max(min(2, old_scale + dy/10), 0.5), 3)
             # Calculate the center of the widget
             center_x = spots_widget.pos[0] + spots_widget.size[0] / 2
             center_y = spots_widget.pos[1] + spots_widget.size[1] / 2
