@@ -5,11 +5,25 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.properties import StringProperty
 from kivy.core.window import Window
-
+from kivy.graphics import Color, Rectangle
 
 class RightWidget(Widget):
     update_callback = None
     name = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        with self.canvas.before:
+            self.color = Color(1, 0, 0, 1) 
+            self.rect = Rectangle(size=self.size, pos=self.pos)
+        self.bind(pos=self.update_rect, size=self.update_rect)
+
+
+    def update_rect(self, instance, value):
+        instance.rect.pos = instance.pos
+        instance.rect.size = instance.size
+        print(instance, instance.rect.pos, instance.rect.size)
+
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
@@ -36,9 +50,6 @@ class RightWidget(Widget):
             return True
         return super().on_touch_up(touch)
 
-
-class RootLayout(AnchorLayout):
-    pass
 
 
 class DemoApp(App):
@@ -76,6 +87,8 @@ class DemoApp(App):
         )
         center_touch.name = "centre"
         center_touch.update_callback = self.update_center_label
+        # Update the color of the existing Color instruction
+        center_touch.color.rgba = (1, 1, 1, 1)  # Semi-transparent blue
 
         # ---------------------------------------------------------------------
         # Right widget
@@ -87,6 +100,9 @@ class DemoApp(App):
         )
         right.name = "right"
         right.update_callback = self.update_center_label
+        print(dir(right))
+        print(dir(right.properties))
+
 
         # Add touch areas first so AnchorLayout overlays them visually
         layout.add_widget(center_touch)
@@ -96,8 +112,10 @@ class DemoApp(App):
         return root
 
 
+
     def update_center_label(self, msg):
         self.center_label.text = msg
+        self.center_label.color = (0, 0, 0, 1) # Black text
 
 
 if __name__ == "__main__":
