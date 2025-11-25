@@ -43,57 +43,57 @@ class RootLayout(AnchorLayout):
 
 class DemoApp(App):
 
-def build(self):
-    root = AnchorLayout()
+    def build(self):
+        root = AnchorLayout()
 
-    layout = FloatLayout()
-    root.add_widget(layout)
+        layout = FloatLayout()
+        root.add_widget(layout)
 
-    # ---------------------------------------------------------------------
-    # Center area
-    # ---------------------------------------------------------------------
+        # ---------------------------------------------------------------------
+        # Center area
+        # ---------------------------------------------------------------------
 
-    # This AnchorLayout will correctly centre the label
-    center_anchor = AnchorLayout(
-        size_hint=(0.9, 1),
-        pos_hint={"x": 0, "y": 0}
-    )
+        # This AnchorLayout will correctly centre the label
+        center_anchor = AnchorLayout(
+            size_hint=(0.9, 1),
+            pos_hint={"x": 0, "y": 0}
+        )
 
-    self.center_label = Label(
-        text="Center Widget: Ready",
-        font_size=24,
-        text_size=(None, None),
-        halign="center",
-        valign="middle"
-    )
+        self.center_label = Label(
+            text="Center Widget: Ready",
+            font_size=24,
+            text_size=(None, None),
+            halign="center",
+            valign="middle"
+        )
 
-    center_anchor.add_widget(self.center_label)
+        center_anchor.add_widget(self.center_label)
 
-    # This widget handles panning but does NOT hold the label
-    center_touch = RightWidget(
-        size_hint=(0.9, 1),
-        pos_hint={"x": 0, "y": 0}
-    )
-    center_touch.name = "centre"
-    center_touch.update_callback = self.update_center_label
+        # This widget handles panning but does NOT hold the label
+        center_touch = RightWidget(
+            size_hint=(0.9, 1),
+            pos_hint={"x": 0, "y": 0}
+        )
+        center_touch.name = "centre"
+        center_touch.update_callback = self.update_center_label
 
-    # ---------------------------------------------------------------------
-    # Right widget
-    # ---------------------------------------------------------------------
+        # ---------------------------------------------------------------------
+        # Right widget
+        # ---------------------------------------------------------------------
 
-    right = RightWidget(
-        size_hint=(0.1, 1),
-        pos_hint={"right": 1, "y": 0}
-    )
-    right.name = "right"
-    right.update_callback = self.update_center_label
+        right = RightWidget(
+            size_hint=(0.1, 1),
+            pos_hint={"right": 1, "y": 0}
+        )
+        right.name = "right"
+        right.update_callback = self.update_center_label
 
-    # Add touch areas first so AnchorLayout overlays them visually
-    layout.add_widget(center_touch)
-    layout.add_widget(center_anchor)
-    layout.add_widget(right)
+        # Add touch areas first so AnchorLayout overlays them visually
+        layout.add_widget(center_touch)
+        layout.add_widget(center_anchor)
+        layout.add_widget(right)
 
-    return root
+        return root
 
 
     def update_center_label(self, msg):
