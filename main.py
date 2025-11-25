@@ -229,7 +229,7 @@ class IsoDraw(App):
 
         # Spots widget (90% of the background area, so 5% edges show)
         spots_widget = Spots(
-            size_hint=(0.9, 0.9)
+            size_hint=(0.9, 0.92)
         )
         
 
@@ -250,27 +250,29 @@ class IsoDraw(App):
         # Right widget
         # ---------------------------------------------------------------------
         right = ScaleWidget(
-            size_hint=(0.1, 1),
+            size_hint=(None, 1),
             pos_hint={"right": 1, "y": 0}
         )
+        right.width = 50
         right.name = "right"
         # Update the color to semi-transparent (or customize as needed)
         right.color.rgba = (0.9, 0.9, 0.9, 0.8)  # Light gray, semi-transparent
 
         def right_update_callback(dx, dy, update=True):
             old_scale = spots_widget.scale
-            new_scale = max(min(2, old_scale + dy/10), 0.25)
+            new_scale = round(max(min(2, old_scale + dy/10), 0.5), 2)
             # Calculate the center of the widget
             center_x = spots_widget.pos[0] + spots_widget.size[0] / 2
             center_y = spots_widget.pos[1] + spots_widget.size[1] / 2
             # Adjust origin so the center stays fixed
             spots_widget.origin[0] = center_x - (center_x - spots_widget.origin[0]) * (new_scale / old_scale)
             spots_widget.origin[1] = center_y - (center_y - spots_widget.origin[1]) * (new_scale / old_scale)
-            spots_widget.scale = new_scale
-            print(spots_widget.scale)
-            if update:
-                spots_widget.update_canvas()
-            
+            if new_scale != old_scale:    
+                spots_widget.scale = new_scale
+                print(spots_widget.scale)
+                if update:
+                    spots_widget.update_canvas()
+                
 
         right.update_callback = right_update_callback
 
