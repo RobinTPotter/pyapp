@@ -60,11 +60,11 @@ class Spots(Widget):
         self.bind(size=self.update_canvas)
         self.bind(pos=self.update_canvas)
         self.py = 0.2828
-        self.spacex = 100
+        self.spacex = 50
         self.drawing = False
         self.lines = []
         self.origin = [0, 0]
-        self.scale = 0.75
+        self.scale = 0.5
         self.base_grid = []
         # Track pinch zoom
         self.start = None
@@ -86,7 +86,7 @@ class Spots(Widget):
     def update_canvas(self, *args):
         # Calculate the visible area considering pan and scale
         margin = 200  # Extra margin to pre-generate dots
-        scaled_spacex = self.spacex * self.scale
+        scaled_spacex = int(self.spacex * self.scale)
         scaled_spacey = int(scaled_spacex * self.py)
         
         self.canvas.clear()
@@ -259,7 +259,7 @@ class IsoDraw(App):
 
         def right_update_callback(dx, dy, update=True):
             old_scale = spots_widget.scale
-            new_scale = round(max(min(2, old_scale + dy/10), 0.5), 3)
+            new_scale = round(max(min(4, old_scale + int(dy/3)), 0.5), 4)
             # Calculate the center of the widget
             center_x = spots_widget.pos[0] + spots_widget.size[0] / 2
             center_y = spots_widget.pos[1] + spots_widget.size[1] / 2
