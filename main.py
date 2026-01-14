@@ -60,11 +60,11 @@ class Spots(Widget):
         self.bind(size=self.update_canvas)
         self.bind(pos=self.update_canvas)
         self.py = 0.2828
-        self.spacex = 50
+        self.spacex = 40
         self.drawing = False
         self.lines = []
         self.origin = [0, 0]
-        self.scale = 0.5
+        self.scale = 1
         self.base_grid = []
         # Track pinch zoom
         self.start = None
@@ -258,8 +258,15 @@ class IsoDraw(App):
         right.color.rgba = (0.9, 0.9, 0.9, 0.8)  # Light gray, semi-transparent
 
         def right_update_callback(dx, dy, update=True):
+            if abs(dy)<1.5: return
+            if abs(dy)>3:
+                s = abs(dy)/dy
+                dy = 3 * s
+
+            print(dy)  
             old_scale = spots_widget.scale
-            new_scale = round(max(min(4, old_scale + int(dy/3)), 0.5), 4)
+            new_scale = round(max(min(4, old_scale + (dy/4)), 0.5), 0)
+            if old_scale==0 or new_scale==0: return
             # Calculate the center of the widget
             center_x = spots_widget.pos[0] + spots_widget.size[0] / 2
             center_y = spots_widget.pos[1] + spots_widget.size[1] / 2
