@@ -48,9 +48,8 @@ class ScaleWidget(Widget):
     def on_touch_up(self, touch):
         if touch.grab_current is self:
             touch.ungrab(self)
+            self.update_callback(0, 0, True)  # Trigger final redraw on release
             return True
-        self.update_callback(0,0,True)
-        #return super().on_touch_up(touch)
 
 
 class Spots(Widget):
@@ -69,6 +68,9 @@ class Spots(Widget):
         # Track pinch zoom
         self.start = None
         self.end = None
+        self.last_origin = None
+        self.last_scale = None
+        self.last_size = None
         self.update_canvas()
 
     def find_nearest_point(self, x, y):
@@ -83,16 +85,31 @@ class Spots(Widget):
 
         return nearest_point
 
+    def _should_redraw(self):
+        """Check if viewport changed enough to warrant redraw"""
+        if (self.last_origin != self.origin or 
+            self.last_scale != self.scale or 
+            self.last_size != self.size):
+            return True
+        return False
+
     def update_canvas(self, *args):
+        # Skip redraw if nothing changed (fast pan/zoom detection)
+        if not self._should_redraw():
+            return
+        
+        # Cache current state
+        self.last_origin = list(self.origin)
+        self.last_scale = self.scale
+        self.last_size = self.size
+        
         # Calculate the visible area considering pan and scale
         margin = 200  # Extra margin to pre-generate dots
         scaled_spacex = int(self.spacex * self.scale)
         scaled_spacey = int(scaled_spacex * self.py)
         
+        # Clear canvas only once
         self.canvas.clear()
-        
-        # Clear base_grid so only current visible points are used
-        self.base_grid = []
         
         # Calculate grid bounds based on current viewport
         min_x = int((-self.origin[0] - margin) / scaled_spacex) * int(scaled_spacex)
@@ -111,6 +128,7 @@ class Spots(Widget):
                 new_points.add((grid_x, grid_y))
         
         # Add only new points to base_grid
+        self.base_grid = []
         for point in new_points:
             self.base_grid.append([point[0], point[1]])
         
@@ -118,20 +136,23 @@ class Spots(Widget):
         self.grid = [[p[0] + self.origin[0], p[1] + self.origin[1]] for p in self.base_grid]
         
         with self.canvas:
-            Color(0.3,0.3,0.3)
-            for p in self.grid:
-                p = (p[0]-1, p[1]-1)
-                Ellipse(pos = p, size=[2,2])
+            # Draw dots efficiently using batched rendering
+            Color(0.3, 0.3, 0.3)
+            dot_size = max(2, int(2 * self.scale))  # Scale dot size with zoom
             
-            Color(0,0,0,1)
+            # Build points list for efficient drawing
+            for p in self.grid:
+                Ellipse(pos=(p[0] - dot_size//2, p[1] - dot_size//2), size=[dot_size, dot_size])
+            
+            # Draw lines
+            Color(0, 0, 0, 1)
             for line in self.lines:
-                Color(0,0,0,1)
                 # Apply origin offset and scale to line coordinates when drawing
                 start_x = line[0][0] * self.scale + self.origin[0]
                 start_y = line[0][1] * self.scale + self.origin[1]
                 end_x = line[1][0] * self.scale + self.origin[0]
                 end_y = line[1][1] * self.scale + self.origin[1]
-                Line(points=[start_x, start_y, end_x, end_y])
+                Line(points=[start_x, start_y, end_x, end_y], width=1.5)
 
 
 
@@ -214,11 +235,12 @@ class IsoDraw(App):
 
 
 
-        def red_update_callback(dx, dy, update=True):
+        def red_update_callback(dx, dy, update=False):
             print(f"red callback (pan) dx={dx} dy={dy}")
             # Pan the drawing canvas
             spots_widget.origin[0] += dx
             spots_widget.origin[1] += dy
+            # Only redraw on touch release (when update=True)
             if update:
                 spots_widget.update_canvas()
             
